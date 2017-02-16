@@ -1,0 +1,79 @@
+<script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<dom-module id="vidyo-io-button">
+    <template>
+        <style>
+            paper-icon-button {
+                width: 100%;
+                height: 100%;
+            }    
+        </style>
+       <paper-icon-button id="button" icon="[[icon]]" on-click="toggle"></paper-icon-button>
+    </template>
+    <script>
+        class VidyoIoButtonHTMLElement extends Polymer.Element {
+            static get is() { return 'vidyo-io-button' }
+
+            static get config() {
+                // properties, observers meta data
+                return {
+                  properties: {
+                    iconOn: {
+                        type: String
+                    },
+                    iconOff: {
+                        type: String
+                    },
+                    colorOn: {
+                        type: String,
+                        value: "white"
+                    },
+                    colorOff: {
+                        type: String,
+                        value: "red"
+                    },
+                    titleOn: {
+                        type: String
+                    },
+                    titleOff: {
+                        type: String
+                    },
+                    event: {
+                        type: String
+                    },
+                    active: {
+                        type: Boolean,
+                        notify:true
+                    }
+                  }
+                };
+            }
+
+            constructor() {
+              super(); // always call super() first in the ctor.
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                document.addEventListener(this.event, function(e) { 
+                    this.$.button.icon = (e.detail.toggle)?this.iconOff:this.iconOn;
+                    this.$.button.style.color = (e.detail.toggle)?this.colorOff:this.colorOn;
+                    if (this.titleOff != undefined && this.titleOn != undefined)
+                        this.$.button.title = (e.detail.toggle)?this.titleOff:this.titleOn;
+                }.bind(this));
+            }
+
+            toggle() {
+                this.active = !this.active;
+            }
+
+
+        }
+        customElements.define(VidyoIoButtonHTMLElement.is, VidyoIoButtonHTMLElement);
+
+    </script>
+
+</dom-module>

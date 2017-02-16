@@ -1,0 +1,13 @@
+<script>
+
+  const LightDom = subclass => class extends subclass {
+
+      _attachDom(dom) {
+              this.appendChild(dom);
+              return this;
+          }
+
+
+  };
+
+</script>

@@ -1,0 +1,62 @@
+<script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="vidyo-io-status">
+    <template>
+        <style>
+            :host {
+                width: 100%;
+                height: 100%;
+                display: -webkit-flex;
+                display: flex;
+            }  
+            div {
+                width: 100%;
+                text-align:        center;
+                align-self:         center;
+            }
+        </style>  
+        <div id="status">[[init]]</div>
+    </template>
+    <script>
+        class VidyoIoStatusHTMLElement extends Polymer.Element {
+            static get is() { return 'vidyo-io-status' }
+
+            static get config() {
+                // properties, observers meta data
+                return {
+                  properties: {
+                    event: {
+                        type: String
+                    },
+                    init: {
+                        type: String
+                    }
+                  }
+                };
+            }
+
+            constructor() {
+              super(); // always call super() first in the ctor.
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                document.addEventListener(this.event, function(e) { 
+                    this.init = e.detail.status; 
+                }.bind(this));
+
+                window.addEventListener('resize', this.notifyResize.bind(this));
+                window.setInterval(this.notifyResize.bind(this), 0);
+            }
+
+            notifyResize() {
+                this.$.status.style.fontSize = "" + this.offsetHeight/3 +  "px";
+            }
+        }
+        customElements.define(VidyoIoStatusHTMLElement.is, VidyoIoStatusHTMLElement);
+
+    </script>
+
+</dom-module>

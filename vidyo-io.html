@@ -1,0 +1,113 @@
+<script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-icons/av-icons.html">
+<link rel="import" href="../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="light-dom.html">
+<link rel="import" href="vidyo-io-main.html">
+<link rel="import" href="vidyo-io-button.html">
+<link rel="import" href="vidyo-io-status.html">
+
+<dom-module id="vidyo-io">
+
+    <template>
+        <style>
+
+            .host {
+                display: block;
+                height:inherit;
+                width:inherit;
+            }
+        
+            .toolbar {
+                display: -webkit-flex;
+                display: flex;
+                -webkit-flex-direction: row;
+                flex-direction: row;    
+                background-color:  rgb(19, 38, 58);
+            }
+
+            vidyo-io-button {
+                --paper-icon-button-ink-color: white;
+                flex:         1;
+            }
+
+            vidyo-io-status {
+                font-family: 'robotolight', 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+                color:        white;
+                margin:       0px 20px;
+                flex:         4;
+            }
+
+        </style>
+        <div class="host">
+            <vidyo-io-main class="renderer"
+                    token-server="[[tokenServer]]" 
+                    host="[[host]]" 
+                    display-name="[[displayName]]" 
+                    participants="[[participants]]"
+                    resource-id="[[resourceId]]"
+                    camera="[[camera]]"
+                    microphone="[[microphone]]"
+                    join="[[join]]">
+            </vidyo-io-main> 
+
+            <paper-material elevation="1" class="toolbar">
+                <vidyo-io-status event="participant-status-changed"></vidyo-io-status>
+                <vidyo-io-button title="Camera Privacy" icon-on="av:videocam" icon-off="av:videocam-off" event="camera-changed" active="{{camera}}"></vidyo-io-button>
+                <vidyo-io-button title-on="Join Conference" title-off="Leave Conference" icon-on="communication:call" icon-off="communication:call-end" event="join-changed" color-on="green" active="{{join}}"></vidyo-io-button>
+                <vidyo-io-button title="Microphone Privacy" icon-on="av:mic" icon-off="av:mic-off" event="microphone-changed" active="{{microphone}}"></vidyo-io-button>
+                <vidyo-io-status event="connection-status-changed" init="Initializing"></vidyo-io-status>
+            </paper-material>
+         </div>
+    </template>
+    <script>
+        class VidyoIoHTMLElement extends LightDom(Polymer.Element) {
+            static get is() { return 'vidyo-io' }
+
+            static get config() {
+                // properties, observers meta data
+                return {
+                  properties: {
+                    tokenServer: {
+                        type: String
+                    },
+                    host: {
+                        type: String,
+                        value: "prod.vidyo.io" 
+                    },
+                    displayName: {
+                        type: String
+                    },
+                    resourceId: {
+                        type: String    
+                    },
+                    participants: {
+                        type: Number,
+                        value: 16
+                    },
+                    controllerHeight: {
+                        type:String,
+                        value: "6%"
+                    }
+                  }
+                };
+            }
+
+            constructor() {
+              super(); // always call super() first in the ctor.
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                this.querySelector(".toolbar").style.height   =  this.controllerHeight;
+                this.querySelector(".renderer").style.height  =  "calc(100% - " + this.controllerHeight + ")";
+            }
+        }
+        customElements.define(VidyoIoHTMLElement.is, VidyoIoHTMLElement);
+
+    </script>
+
+</dom-module>

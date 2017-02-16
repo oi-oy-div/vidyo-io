@@ -1,0 +1,515 @@
+<script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="light-dom.html">
+
+<dom-module id="vidyo-io-main">
+
+	<script>
+		class VidyoIoMainHTMLElement extends LightDom(Polymer.Element) {
+		      static get is() { return 'vidyo-io-main' }
+
+		      static get config() {
+		        // properties, observers meta data
+		        return {
+		          properties: {
+		            tokenServer: {
+		            	type: String
+		            },
+		            host: {
+		            	type: String
+		            },
+		            displayName: {
+		            	type: String
+		            },
+	    		    resourceId: {
+	    		    	type: String	
+	    		    },																																												
+	    		    participants: {
+	    		    	type: Number,
+	    		    	value: 16
+	    		    },
+		            camera: {
+		              type: Boolean,
+		              observer: '_cameraChanged'
+		            },
+		            microphone: {
+		              type: Boolean,
+		              observer: '_microphoneChanged'
+		            },
+		            join: {
+		              type: Boolean,
+		              observer: '_joinChanged'
+		            },
+		            vidyoIoVersion: {
+		            	type: String,
+		            	value: "4.1.6.2"
+		            },
+		            customLayout: {
+		            	type: Boolean,
+		            	value: false
+		            }
+		          }
+		        };
+		      }
+
+		    _cameraChanged(newValue, oldValue) {
+		        this.cameraPrivacy = newValue;
+		        if (!this.customLayout) {
+			        if (this.vidyoConnector)
+				        this.vidyoConnector.SetCameraPrivacy({
+				            privacy: this.cameraPrivacy,
+				        }).then(function() {
+				        	this.dispatchEvent(new CustomEvent('camera-changed', 
+				        						{
+				        							detail: {toggle : newValue},
+				        							bubbles: true
+				        						}));
+				            console.log("SetCameraPrivacy Success");
+				        }.bind(this)).catch(function() {
+				            console.error("SetCameraPrivacy Failed");
+				        }.bind(this));
+				}
+				else {        
+				    if (newValue) {
+					    this.vidyoConnector.HideView({
+							viewId: this.renderer_id
+						}).then(function() {
+				        	this.dispatchEvent(new CustomEvent('camera-changed', 
+				        						{
+				        							detail: {toggle : newValue},
+				        							bubbles: true
+				        						}));
+				            console.log("HideView Success");
+				        }.bind(this)).catch(function() {
+				            console.error("HideView Failed");
+				        }.bind(this));
+					}
+					else {
+						if (this.AssignViewToLocalCamera)
+						this.vidyoConnector.AssignViewToLocalCamera({
+							viewId: this.renderer_id,
+							localCamera: this.localCamera,
+							displayCropped: true,
+							allowZoom: false
+						}).then(function() {
+				        	this.dispatchEvent(new CustomEvent('camera-changed', 
+				        						{
+				        							detail: {toggle : newValue},
+				        							bubbles: true
+				        						}));
+				            console.log("SetCameraPrivacy Success");
+				        }.bind(this)).catch(function() {
+				            console.error("SetCameraPrivacy Failed");
+				        }.bind(this));
+					}
+
+				}	
+		    }
+
+
+		    // Handle the microphone mute button, toggle between mute and unmute audio.
+		    _microphoneChanged(newValue, oldValue) {
+		        // MicrophonePrivacy button clicked
+		        this.microphonePrivacy = newValue;
+		        if (this.vidyoConnector)
+		        	this.vidyoConnector.SetMicrophonePrivacy({
+		            privacy: this.microphonePrivacy
+			        }).then(function() {
+			        	this.dispatchEvent(new CustomEvent('microphone-changed', 
+			        						{
+			        							detail: {toggle : newValue},
+			        							bubbles: true
+			        						}));
+			            console.log("SetMicrophonePrivacy Success");
+			        }.bind(this)).catch(function() {
+			            console.error("SetMicrophonePrivacy Failed");
+			        }.bind(this));
+		    }
+
+		    _joinChanged(newValue, oldValue) {
+		        // MicrophonePrivacy button clicked
+		        this.join = newValue;
+		        if (this.vidyoConnector && newValue !== undefined) {
+		        	if (newValue) {
+		        		this._join();
+		        	}
+		        	else {
+		        		this._leave();
+		        	}
+		        }
+		    }
+
+		    set _canJoin(newValue) {
+	        	this.dispatchEvent(new CustomEvent('join-changed', 
+	        						{
+	        							detail: {toggle : !newValue},
+	        							bubbles: true
+	        						}));
+	       		this.__canJoin = newValue; 	
+		    }
+
+		    get _canJoin() {
+		    	return this.__canJoin;
+		    }
+
+		    _sendParticipantStatusEvent(status) {
+				this.dispatchEvent(new CustomEvent('participant-status-changed', 
+									{
+										detail: {status : status},
+										bubbles: true
+									}));
+
+		    }
+
+		    _sendConnectionStatusEvent(status) {
+				this.dispatchEvent(new CustomEvent('connection-status-changed', 
+									{
+										detail: {status : status},
+										bubbles: true
+									}));
+
+		    }
+
+		    cycleCamera() {
+		    	if (this.vidyoConnector)
+		        	this.vidyoConnector.CycleCamera();
+		    }
+
+		    cycleMicrophone() {
+		    	if (this.vidyoConnector)
+		        	this.vidyoConnector.CycleMicrophone();
+		    }
+
+		    cycleSpeaker() {
+		    	if (this.vidyoConnector)
+		        	this.vidyoConnector.CycleSpeaker();
+		    }
+
+			static getJSON(url) {
+			  // Return a new promise.
+			  return new Promise(function(resolve, reject) {
+			    // Do the usual XHR stuff
+			    var req = new XMLHttpRequest();
+			    req.open('GET', url);
+			    req.responseType = "json";
+			    req.onload = function() {
+			      // This is called even on 404 etc
+			      // so check the status
+			      if (req.status == 200) {
+			        // Resolve the promise with the response text
+			        resolve(req.response);
+			      }
+			      else {
+			        // Otherwise reject with the status text
+			        // which will hopefully be a meaningful error
+			        reject(Error(req.statusText));
+			      }
+			    };
+
+			    // Handle network errors
+			    req.onerror = function() {
+			      reject(Error("Network Error"));
+			    };
+
+			    // Make the request
+			    req.send();
+			  });
+			}
+
+		    constructor() {
+		      super(); // always call super() first in the ctor.
+		      this._camera = true;
+		    }
+
+		    connectedCallback() {
+		    	super.connectedCallback();
+		    	this.cameras = {};
+			    this.microphones = {};
+			    this.speakers = {};
+			    this.remoteCameras = {};
+
+
+				this.renderer_id = "r" + Math.floor(Math.random()*100000);
+				var e = document.createElement('div');
+				e.id = this.renderer_id;
+				e.style.height = "inherit";
+				e.style.width = "inherit";
+				this.appendChild(e);
+
+
+			    this.loadVidyoClientLibrary(true, false);
+		    }
+
+		    loadVidyoClientLibrary(webrtc, plugin) {
+			    //We need to ensure we're loading the VidyoClient library and listening for the callback.
+			    var script = document.createElement('script');
+			    script.type = 'text/javascript';
+
+			    window.onVidyoClientLoadedWithParam = this.onVidyoClientLoaded.bind(this);
+			    script.src = 'https://static.vidyo.io/' + this.vidyoIoVersion + '/javascript/VidyoClient/VidyoClient.js?onload=onVidyoClientLoadedWithParam&webrtc=' + webrtc + '&plugin=' + plugin;    
+
+			    this.appendChild(script);
+			}
+
+
+			onVidyoClientLoaded(status) {
+			    console.log("Status: " + status.state + "Description: " + status.description);
+			    switch (status.state) {
+			        case "READY":    // The library is operating normally
+			            this._sendConnectionStatusEvent("Ready");
+			            // After the VidyoClient is successfully initialized a global VC object will become available 
+			            // All of the VidyoConnector gui and logic is implemented in VidyoConnector.js
+			            this._startVidyoConnector(VC);
+			            break;
+			        case "RETRYING": // The library operating is temporarily paused
+			            this._sendConnectionStatusEvent("Temporarily unavailable retrying in " + status.nextTimeout/1000 + " seconds");
+			            break;
+			        case "FAILED":   // The library operating has stopped
+			            this._sendConnectionStatusEvent("Failed: " + status.description);
+			            break;
+			        case "FAILEDVERSION":   // The library operating has stopped
+			            this._sendConnectionStatusEvent("Failed: " + status.description);
+			            break;
+			        case "NOTAVAILABLE": // The library is not available
+			            this.connectionStatus.innerHTML = status.description;
+			            break;
+			    }
+			    return true; // Return true to reload the plugins if not available
+			}
+
+			_startVidyoConnector(VC) {
+			    this.cameraPrivacy = false;
+			    this.microphonePrivacy = false;
+
+	            this._canJoin = true;
+			    VC.CreateVidyoConnector({
+			        viewId: (!this.customLayout)?this.renderer_id: "", // Div ID where the composited video will be rendered
+			        viewStyle: (!this.customLayout)?"VIDYO_CONNECTORVIEWSTYLE_Default":"VIDYO_CONNECTORVIEWSTYLE_Tiles", // Visual style of the composited renderer
+			        remoteParticipants: this.participants,     // Maximum number of participants
+			        logFileFilter: "warning all@VidyoConnector info@VidyoClient",
+			        logFileName:"",
+			        userData:""
+			    }).then(function(vc) {
+			        this.vidyoConnector = vc;
+			        this.registerDeviceListeners();
+
+			        this._joinChanged(this.join);
+			        this._microphoneChanged(this.microphone);
+			        this._cameraChanged(this.camera);
+
+			    }.bind(this)).catch(function(err) {
+			        console.error("CreateVidyoConnector Failed " + err);
+			    });
+
+			}
+
+		    _join() {
+		    	if (this._canJoin) {
+			        this._sendConnectionStatusEvent("Connecting...");
+			        this._connectToConference();
+		   		    this._canJoin = false;
+			    }
+		    }
+
+		    _leave() {
+		    	if (!this._canJoin) {
+			        this.vidyoConnector.Disconnect().then(function() {
+			            console.log("Disconnect Success");
+			        }).catch(function() {
+			            console.error("Disconnect Failure");
+			        });
+		   		    this._canJoin = true;
+			    }
+		    }
+
+		    // Attempt to connect to the conference
+			// We will also handle connection failures
+			// and network or server-initiated disconnects.
+			_connectToConference() {
+			    // Clear messages
+				VidyoIoMainHTMLElement.getJSON(this.tokenServer).then(function(data) {
+			    	if (!this._canJoin) {
+			            var param = {
+			                // Take input from options form
+			                host: this.host,
+			                token: data.token,
+			                displayName: this.displayName,
+			                resourceId: this.resourceId,
+
+			                // Define handlers for connection events.
+			                onSuccess: function() {
+			                    // Connected
+			                    this._sendConnectionStatusEvent("Connected");
+			                    this.handleParticipantChange();
+			                }.bind(this),
+			                onFailure: function(reason) {
+			                    // Failed
+			                    this._sendConnectionStatusEvent("Failed");
+		               		    this._canJoin = true;
+			                    this._sendParticipantStatusEvent("");
+			                }.bind(this),
+			                onDisconnected: function(reason) {
+			                    // Disconnected
+			                    this._sendConnectionStatusEvent("Disconnected");
+		               		    this._canJoin = true;
+			                    this._sendParticipantStatusEvent("");
+			                }.bind(this)
+			            }
+			            this.vidyoConnector.Connect(param).then(function(status) {
+			                if (status) {
+			                    console.log("ConnectCall Success");
+			                } else {
+			                    console.error("ConnectCall Failed");
+			                }
+			            }).catch(function() {
+			                console.error("ConnectCall Failed");
+			            });
+			        }
+		        }.bind(this)).catch(function () {
+		            this._sendConnectionStatusEvent("Failed");
+		            this._canJoin = true;
+		            this._sendParticipantStatusEvent("");
+
+		        }.bind(this));
+
+			}
+
+			// Run StartVidyoConnector when the VidyoClient is successfully loaded
+			registerDeviceListeners() {
+			    // Handle appearance and disappearance of camera devices in the system
+			    this.vidyoConnector.RegisterLocalCameraEventListener({
+			        onAdded: function(localCamera) {
+			            // New camera is available
+			            this.cameras[window.btoa(localCamera.id)] = localCamera;
+			            this.localCamera = localCamera;
+			        }.bind(this),
+			        onRemoved: function(localCamera) {
+			            // Existing camera became unavailable
+			            delete this.cameras[window.btoa(localCamera.id)];
+			        }.bind(this),
+			        onSelected: function(localCamera) {
+			            // Camera was selected/unselected by you or automatically
+			        }.bind(this),
+			        onStateUpdated: function(localCamera, state) {
+			            // Camera state was updated
+			        }.bind(this)
+			    }).then(function() {
+			        console.log("RegisterLocalCameraEventListener Success");
+			    }).catch(function() {
+			        console.error("RegisterLocalCameraEventListener Failed");
+			    });
+
+
+				// Handle appearance and disappearance of microphone devices in the system
+				this.vidyoConnector.RegisterLocalMicrophoneEventListener({
+			        onAdded: function(localMicrophone) {
+			            // New microphone is available
+			            this.microphones[window.btoa(localMicrophone.id)] = localMicrophone;
+			        }.bind(this),
+			        onRemoved: function(localMicrophone) {
+			            // Existing microphone became unavailable
+			            delete this.microphones[window.btoa(localMicrophone.id)];
+			        }.bind(this),
+			        onSelected: function(localMicrophone) {
+			            // Microphone was selected/unselected by you or automatically
+			        }.bind(this),
+			        onStateUpdated: function(localMicrophone, state) {
+			            // Microphone state was updated
+			        }.bind(this)
+			    }).then(function() {
+			        console.log("RegisterLocalMicrophoneEventListener Success");
+			    }).catch(function() {
+			        console.error("RegisterLocalMicrophoneEventListener Failed");
+			    });
+
+				// Handle appearance and disappearance of speaker devices in the system
+				this.vidyoConnector.RegisterLocalSpeakerEventListener({
+			        onAdded: function(localSpeaker) {
+			            // New speaker is available
+			            this.speakers[window.btoa(localSpeaker.id)] = localSpeaker;
+			        }.bind(this),
+			        onRemoved: function(localSpeaker) {
+			            // Existing speaker became unavailable
+			            delete this.speakers[window.btoa(localSpeaker.id)];
+			        }.bind(this),
+			        onSelected: function(localSpeaker) {
+			            // Speaker was selected/unselected by you or automatically
+			        }.bind(this),
+			        onStateUpdated: function(localSpeaker, state) {
+			            // Speaker state was updated
+			        }.bind(this)
+			    }).then(function() {
+			        console.log("RegisterLocalSpeakerEventListener Success");
+			    }).catch(function() {
+			        console.error("RegisterLocalSpeakerEventListener Failed");
+			    });
+
+			    if (false) {
+					/* custom participant's source view */
+					this.vidyoConnector.RegisterRemoteCameraEventListener({
+						onAdded: function(remoteCamera, participant) { /* New camera is available */
+							this.remoteCameras[window.btoa(remoteCamera.id)] = remoteCamera;
+						}.bind(this),
+						onRemoved: function(remoteCamera, participant) { /* Existing camera became unavailable */
+							delete this.remoteCameras[window.btoa(remoteCamera.id)];
+						}.bind(this)
+					}).then(function() {
+						console.log("RegisterRemoteCameraEventListener Success");
+					}).catch(function() {
+						console.error("RegisterRemoteCameraEventListener Failed");
+					});
+				}
+
+			}
+
+			getParticipantName(participant, cb) {
+			    if (!participant) {
+			        cb("Undefined");
+			        return;
+			    }
+
+			    if (participant.name) {
+			        cb(participant.name);
+			        return;
+			    }
+
+			    participant.GetName().then(function(name) {
+			        cb(name);
+			    }).catch(function() {
+			        cb("GetNameFailed");
+			    });
+			}
+
+			handleParticipantChange() {
+			    this.vidyoConnector.RegisterParticipantEventListener({
+			        onJoined: function(participant) {
+			            this.getParticipantName(participant, function(name) {
+			                this._sendParticipantStatusEvent("" + name + " Joined");
+			            }.bind(this));
+			        }.bind(this),
+			        onLeft: function(participant) {
+			            this.getParticipantName(participant, function(name) {
+			                this._sendParticipantStatusEvent("" + name + " Left");
+			            }.bind(this));
+			        }.bind(this),
+			        onDynamicChanged: function(participants, cameras) {
+			            // Order of participants changed
+			        }.bind(this),
+			        onLoudestChanged: function(participant, audioOnly) {
+			            this.getParticipantName(participant, function(name) {
+			                this._sendParticipantStatusEvent("" + name + " Speaking");
+			            }.bind(this));
+			        }.bind(this)
+			    }).then(function() {
+			        console.log("RegisterParticipantEventListener Success");
+			    }).catch(function() {
+			        console.err("RegisterParticipantEventListener Failed");
+			    });
+			}
+		}
+		customElements.define(VidyoIoMainHTMLElement.is, VidyoIoMainHTMLElement);
+
+	</script>
+
+</dom-module>
+
