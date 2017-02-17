@@ -16,7 +16,7 @@ bower install --save oi-oy-div/vidyo-io-elements
 ## Installation and Usage of demo
 The repository contains a demo showing the usage of the components. 
 To run the demo one would need to get [Vidyo IO account](https://developer.vidyo.io) and 
-copy "Application ID" and "Developer Key" from the [Dashboard](https://developer.vidyo.io/dashboard)
+copy *Application ID* and *Developer Key* from the [Dashboard](https://developer.vidyo.io/dashboard)
 
 NOTE: Knowledge of these values allows access to your vidyo io minutes, so keep them private.
 
