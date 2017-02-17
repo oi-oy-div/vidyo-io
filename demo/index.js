@@ -1,5 +1,4 @@
 // content of index.js
-const http = require('http')  
 const jsSHA = require('jssha');
 const btoa = require('btoa');
 const express = require('express');
