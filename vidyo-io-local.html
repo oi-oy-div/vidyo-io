@@ -1,0 +1,125 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="vidyo-io-local">
+
+    <script>
+        class VidyoIoLocalHTMLElement extends Polymer.Element {
+              static get is() { return 'vidyo-io-local' }
+
+              static get properties() {
+                // properties, observers meta data
+                return {
+                    camera: {
+                      type: Boolean,
+                      observer: '_cameraChanged'
+                    },
+                    customLayout: {
+                        type: Boolean,
+                        value: false
+                    }
+                };
+              }
+
+            _showSelfView(camera) {
+                if (camera) {
+                    this.removeChild(document.getElementById(this.renderer_id));
+                    
+                    this.renderer_id = "r" + Math.floor(Math.random()*100000);
+                    var e = document.createElement('div');
+                    e.id = this.renderer_id;
+                    e.style.height = "inherit";
+                    e.style.width = "inherit";
+                    this.appendChild(e);
+
+                    this.vidyoConnector.AssignViewToLocalCamera({
+                        viewId: this.renderer_id,
+                        localCamera: camera,
+                        displayCropped: true,
+                        allowZoom: false
+                    }).then(function() {
+                        console.log("AssignViewToLocalCamera Success");
+                    }.bind(this)).catch(function() {
+                        console.error("AssignViewToLocalCamera Failed");
+                    }.bind(this));
+                }
+
+            }
+
+            _cameraChanged(newValue, oldValue) {
+                if (this.vidyoConnector) {
+                    this.vidyoConnector.SetCameraPrivacy({
+                        privacy: this.camera,
+                    }).then(function() {
+                        console.log("SetCameraPrivacy Success");
+                        if (this.customLayout) {
+                            if (newValue) {
+                                this.vidyoConnector.HideView({
+                                    viewId: this.renderer_id
+                                }).then(function() {
+                                    console.log("HideView Success");
+                                }.bind(this)).catch(function() {
+                                    console.error("HideView Failed");
+                                }.bind(this));
+                            }
+                            else {
+                                this._showSelfView(this.localCamera);
+                            }
+                        }  
+                    }.bind(this)).catch(function() {
+                        console.error("SetCameraPrivacy Failed");
+                    }.bind(this));
+                }
+            }
+
+            _cameraReselect(camera) {
+                if (!this.camera && this.customLayout) {
+                    this.vidyoConnector.HideView({
+                        viewId: this.renderer_id
+                    }).then(function() {
+                        console.log("HideView Success");
+                        this._showSelfView(camera);
+                        this.localCamera = camera;
+                    }.bind(this)).catch(function() {
+                        console.error("HideView Failed");
+                    }.bind(this));
+                }
+            }
+
+
+            constructor() {
+              super(); // always call super() first in the ctor.
+              this._camera = true;
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                this.renderer_id = "r" + Math.floor(Math.random()*100000);
+                var e = document.createElement('div');
+                e.id = this.renderer_id;
+                e.style.height = "inherit";
+                e.style.width = "inherit";
+                this.appendChild(e);
+
+                document.addEventListener("vidyo-io-ready", function(e) { 
+                    document.querySelector("vidyo-io-main").start((this.customLayout)?null:this.renderer_id);
+                }.bind(this));
+
+                document.addEventListener("vidyo-io-started", function(e) { 
+                    this._cameraChanged(this.camera);
+                    this.vidyoConnector = document.querySelector("vidyo-io-main").vidyoConnector;
+                }.bind(this));
+
+                document.addEventListener("camera-selected-changed", function(e) { 
+                    this._cameraReselect(e.detail);
+                }.bind(this));
+
+            }
+
+        }
+        customElements.define(VidyoIoLocalHTMLElement.is, VidyoIoLocalHTMLElement);
+
+    </script>
+
+</dom-module>
+

@@ -1,0 +1,32 @@
+<script>
+    const VidyoIoRemotes = (subclass, kind) => class extends subclass {
+
+        static get properties() {
+            // properties, observers meta data
+            return {
+                remotes: {
+                    type: Array,
+                    value: function() {return [];}
+                }
+            };
+        }
+
+        connectedCallback() {
+            super.connectedCallback();
+
+            document.addEventListener("remote-" + kind + "-list-changed", function(e) { 
+                this.remotes = [];  
+                for (var key in e.detail) {
+                    if (e.detail.hasOwnProperty(key)) {
+                        e.detail[key].key = key;
+                        this.remotes.push(e.detail[key]);
+                    }
+                }
+                this.notifyPath('remotes');
+            }.bind(this));
+
+        }
+    };
+
+</script>
+

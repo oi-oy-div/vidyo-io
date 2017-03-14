@@ -16,7 +16,7 @@ bower install --save oi-oy-div/vidyo-io-elements
 ## Installation and Usage of demo
 The repository contains a demo showing the usage of the components. 
 To run the demo one would need to get [Vidyo IO account](https://developer.vidyo.io) and 
-copy "Application ID" and "Developer Key" from the [Dashboard](https://developer.vidyo.io/dashboard)
+copy *Application ID* and *Developer Key* from the [Dashboard](https://developer.vidyo.io/dashboard)
 
 NOTE: Knowledge of these values allows access to your vidyo io minutes, so keep them private.
 
@@ -37,7 +37,7 @@ npm install config
 ```
 * Run the demo server
 ```
-node bower_components\vidyo-io-elements\demo\index.js
+node bower_components/vidyo-io-elements/demo/index.js
 ```
 * Access the [demo](http://localhost:6789) 
 * Allow the app to use the camera and microphone when asked 

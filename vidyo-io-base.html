@@ -1,0 +1,39 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="vidyo-io-config.html">
+
+<dom-module id="vidyo-io-base">
+
+    <script>
+        class VidyoIoBaseHTMLElement extends VidyoIoConfig(Polymer.Element) {
+            static get is() { return 'vidyo-io-base' }
+
+            constructor() {
+              super(); // always call super() first in the ctor.
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                //We need to ensure we're loading the VidyoClient library and listening for the callback.
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+
+                window._onVidyoClientLoadedWithParam = this._onVidyoClientLoaded.bind(this);
+
+                /*The VidyoClient in the following line is split into parts intentionally!*/
+                /*Webcomponents html imports polyfill extracts javascript from html pages and converts it into script tags with src containing data URLs with the actual javascript. */
+                /*VidyoClient code is looking for the script tag which loaded itself (searching for the javascript file name in the src attribute of some script tag) and by mistake finds the tag created by the polyfill*/
+
+                script.src = 'https://static.vidyo.io/' + this.vidyoIoVersion + '/javascript/VidyoClient/Vidyo' + 
+                                                                                'Client.js?onload=_onVidyoClientLoadedWithParam&webrtc=true';    
+                /*script.src = 'http://localhost:6789/javascript/VidyoClient/Vidyo' + 
+                                                                                'Client.js?onload=_onVidyoClientLoadedWithParam&webrtc=true';    */
+
+                document.head.appendChild(script);  
+            }
+
+        }
+    </script>
+
+</dom-module>
+

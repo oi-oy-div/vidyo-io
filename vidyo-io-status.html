@@ -21,17 +21,15 @@
         class VidyoIoStatusHTMLElement extends Polymer.Element {
             static get is() { return 'vidyo-io-status' }
 
-            static get config() {
+            static get properties() {
                 // properties, observers meta data
                 return {
-                  properties: {
                     event: {
                         type: String
                     },
                     init: {
                         type: String
                     }
-                  }
                 };
             }
 

@@ -15,10 +15,9 @@
         class VidyoIoButtonHTMLElement extends Polymer.Element {
             static get is() { return 'vidyo-io-button' }
 
-            static get config() {
+            static get properties() {
                 // properties, observers meta data
                 return {
-                  properties: {
                     iconOn: {
                         type: String
                     },
@@ -44,9 +43,9 @@
                     },
                     active: {
                         type: Boolean,
+                        value: false,
                         notify:true
                     }
-                  }
                 };
             }
 
@@ -58,11 +57,16 @@
                 super.connectedCallback();
 
                 document.addEventListener(this.event, function(e) { 
-                    this.$.button.icon = (e.detail.toggle)?this.iconOff:this.iconOn;
-                    this.$.button.style.color = (e.detail.toggle)?this.colorOff:this.colorOn;
-                    if (this.titleOff != undefined && this.titleOn != undefined)
-                        this.$.button.title = (e.detail.toggle)?this.titleOff:this.titleOn;
+                    this._set(e.detail.toggle);
                 }.bind(this));
+                this._set(this.active);
+            }
+
+            _set(toggle) {
+                this.$.button.icon = (toggle)?this.iconOff:this.iconOn;
+                this.$.button.style.color = (toggle)?this.colorOff:this.colorOn;
+                if (this.titleOff != undefined && this.titleOn != undefined)
+                    this.$.button.title = (toggle)?this.titleOff:this.titleOn;
             }
 
             toggle() {

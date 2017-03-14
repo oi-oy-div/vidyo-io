@@ -1,0 +1,75 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+
+<dom-module id="vidyo-io-selector">
+    <template>
+        <paper-dropdown-menu label="[[label]]">
+          <paper-listbox class="dropdown-content" id="items" on-iron-select="onItemSelected">
+            <dom-repeat items="[[items]]">
+                <template>
+                    <paper-item value="[[item.id]]">[[item.name]]</paper-item>
+                </template>
+            </dom-repeat>
+          </paper-listbox>
+        </paper-dropdown-menu>
+
+    </template>
+    <script>
+        class VidyoIoSelectorTMLElement extends Polymer.Element {
+            static get is() { return 'vidyo-io-selector' }
+
+            static get properties() {
+                // properties, observers meta data
+                return {
+                    label: {
+                        type: String
+                    },
+                    kind: {
+                        type: String
+                    },
+                    items: {
+                        type: Array,
+                        value: function() {return [];}
+                    }
+                };
+            }
+
+            constructor() {
+              super(); // always call super() first in the ctor.
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                document.addEventListener(this.kind+"-list-changed", function(e) { 
+                    this.items = [];  
+                    for (var key in e.detail) {
+                      if (e.detail.hasOwnProperty(key)) {
+                        this.items.push(e.detail[key]);
+                      }
+                    }
+                    this.notifyPath('items');
+                }.bind(this));
+                document.addEventListener(this.kind+"-selected-changed", function(e) { 
+                    for (var key in this.items) {
+                      if (this.items[key].id == e.detail.id) {
+                        this.$.items.selected = key;
+                      }
+                    }
+                }.bind(this));
+            }    
+
+            onItemSelected(e) {
+                document.querySelector("vidyo-io-main").select(this.kind, e.detail.item.value);
+            }
+
+
+
+        }
+        customElements.define(VidyoIoSelectorTMLElement.is, VidyoIoSelectorTMLElement);
+
+    </script>
+
+</dom-module>

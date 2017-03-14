@@ -1,0 +1,94 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="vidyo-io-remote">
+
+    <script>
+        class VidyoIoRemoteHTMLElement extends Polymer.Element {
+            static get is() { return 'vidyo-io-remote' }
+
+            static get properties() {
+                // properties, observers meta data
+                return {
+                    camera: {
+                        type:Object
+                    }
+                };
+            }
+
+            _assignRemoteCamera(renderer_id, camera_id) {
+                window.setTimeout(function() {
+                    this.vidyoConnector.AssignViewToRemoteCamera({
+                        viewId: renderer_id,
+                        remoteCamera: this._remoteCameras[camera_id].camera,
+                        displayCropped: true,
+                        allowZoom: false
+                    }).then(function() {
+                        console.log("AssignViewToRemoteCamera Success");
+                    }.bind(this)).catch(function() {
+                        console.error("AssignViewToRemoteCamera Failed");
+                    }.bind(this));
+                }.bind(this), 0);
+            }
+
+            _hideRemoteCamera(renderer_id) {
+                this.vidyoConnector.HideView({
+                    viewId: renderer_id
+                }).then(function() {
+                    console.log("HideView Success");
+                }.bind(this)).catch(function() {
+                    console.error("HideView Failed");
+                }.bind(this));
+
+            }
+
+
+            constructor() {
+              super(); // always call super() first in the ctor.
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+
+                this.renderer_id = "r" + Math.floor(Math.random()*100000);
+                var e = document.createElement('div');
+                e.id = this.renderer_id;
+                e.style.height = "inherit";
+                e.style.width = "inherit";
+                this.appendChild(e);
+
+
+                this.vidyoConnector = document.querySelector("vidyo-io-main").vidyoConnector;
+                if (!this.vidyoConnector) {
+                    document.addEventListener("vidyo-io-started", function(e) { 
+                        this.vidyoConnector = document.querySelector("vidyo-io-main").vidyoConnector;
+                        this._remoteCameras = document.querySelector("vidyo-io-main").remoteCameras;
+                        this._assignRemoteCamera(this.renderer_id, this.camera.key);
+                    }.bind(this));
+                }
+                else {
+                    this._remoteCameras = document.querySelector("vidyo-io-main").remoteCameras;
+                    this._assignRemoteCamera(this.renderer_id, this.camera.key);
+                }
+
+                document.addEventListener("remote-camera-list-changed", function(e) { 
+                    this._remoteCameras = e.detail;                        
+                    if (this._remoteCameras && this._remoteCameras[this.camera.key])
+                        this._assignRemoteCamera(this.renderer_id, this.camera.key);
+                }.bind(this));
+
+
+            }
+
+            disconnectedCallback() {
+                super.disconnectedCallback();
+                if (this.vidyoConnector)
+                    this._hideRemoteCamera(this.renderer_id);
+            }
+
+        }
+        customElements.define(VidyoIoRemoteHTMLElement.is, VidyoIoRemoteHTMLElement);
+
+    </script>
+
+</dom-module>
+
