@@ -37,7 +37,7 @@ npm install config
 ```
 * Run the demo server
 ```
-node bower_components\vidyo-io-elements\demo\index.js
+node bower_components/vidyo-io-elements/demo/index.js
 ```
 * Access the [demo](http://localhost:6789) 
 * Allow the app to use the camera and microphone when asked 
