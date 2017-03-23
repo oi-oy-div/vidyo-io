@@ -1,3 +1,5 @@
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/oi-oy-div/vidyo-io-elements)
+
 # Set of Polymer 2.0 Components for Vidyo IO 
 
 ## Installation
@@ -44,5 +46,22 @@ node bower_components/vidyo-io-elements/demo/index.js
 * Repeat this process on another computer
 * Press the green handset on both computers to establish a connection
 
-
+<!--
+```
+<custom-element-demo>
+  <template>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="vidyo-io.html">
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+   <vidyo-io
+        token-server="http://localhost:6789/getToken"
+        display-name="Best User" 
+        fill-viewport
+        resource-id="VidyoIODemoRoom">
+   </vidyo-io>
+```
 
