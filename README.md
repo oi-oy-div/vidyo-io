@@ -54,8 +54,8 @@ node bower_components/vidyo-io-elements/demo/index.js
     <link rel="import" href="vidyo-io.html">
     <style>
         vidyo-io {
-          width: 600px;
-          height: 600px;
+          width: 300px;
+          height: 300px;
         }
     </style>    
     <next-code-block></next-code-block>
