@@ -54,8 +54,8 @@ node bower_components/vidyo-io-elements/demo/index.js
     <link rel="import" href="vidyo-io.html">
     <style>
         vidyo-io {
-          width: 300px;
-          height: 300px;
+          width: 500px;
+          height: 400px;
         }
     </style>    
     <next-code-block></next-code-block>
@@ -67,6 +67,7 @@ node bower_components/vidyo-io-elements/demo/index.js
    <vidyo-io
         token-server="http://localhost:6789/getToken"
         display-name="Best User" 
+        controller-height="10%"
         resource-id="VidyoIODemoRoom">
    </vidyo-io>
 ```
