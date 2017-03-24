@@ -1,4 +1,4 @@
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/oi-oy-div/vidyo-io-elements)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/oi-oy-div/vidyo-io)
 
 ##&lt;vidyo-io&gt;
 
@@ -11,10 +11,10 @@
 ```
 npm install -g bower
 ```
-* Create a directory where you want to install vidyo-io-elements and make this directory current
-* Using bower install the vidyo-io-elements (this repository)
+* Create a directory where you want to install vidyo-io and make this directory current
+* Using bower install the vidyo-io
 ```
-bower install --save oi-oy-div/vidyo-io-elements
+bower install --save oi-oy-div/vidyo-io
 ```
 
 ## Installation and Usage of demo
@@ -24,7 +24,7 @@ copy *Application ID* and *Developer Key* from the [Dashboard](https://developer
 
 NOTE: Knowledge of these values allows access to your vidyo io minutes, so keep them private.
 
-* In the directory where the vidyo-io-elements are installed create directory config and in it create file named default.json containing
+* In the directory where the vidyo-io are installed create directory config and in it create file named default.json containing
 ```js
 {
   "key":"[[Developer Key]]",
@@ -41,7 +41,7 @@ npm install config
 ```
 * Run the demo server
 ```
-node bower_components/vidyo-io-elements/demo/index.js
+node bower_components/vidyo-io/demo/index.js
 ```
 * Access the [demo](http://localhost:6789) 
 * Allow the app to use the camera and microphone when asked 
