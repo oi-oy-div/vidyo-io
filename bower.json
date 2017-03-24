@@ -26,7 +26,7 @@
     "paper-material": "PolymerElements/paper-material#2.0-preview",
     "paper-item": "PolymerElements/paper-item#2.0-preview",
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#2.0-preview",
-    "paper-listbox": "PolymerElements/paper-listbox#2.0-preview",
+    "paper-listbox": "PolymerElements/paper-listbox#2.0-preview"
   },
   "devDependencies": {
   },
