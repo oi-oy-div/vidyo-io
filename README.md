@@ -1,6 +1,6 @@
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/oi-oy-div/vidyo-io-elements)
 
-##<vidyo-io>
+##&lt;vidyo-io&gt;
 
 # A Polymer 2.0 Component for Vidyo IO 
 
