@@ -29,6 +29,7 @@
     "paper-listbox": "PolymerElements/paper-listbox#2.0-preview"
   },
   "devDependencies": {
+     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
   },
   "ignore": []
 }
