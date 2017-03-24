@@ -1,6 +1,8 @@
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/oi-oy-div/vidyo-io-elements)
 
-# Set of Polymer 2.0 Components for Vidyo IO 
+##<vidyo-io>
+
+# A Polymer 2.0 Component for Vidyo IO 
 
 ## Installation
 * Install [git](https://git-scm.com/download) 
