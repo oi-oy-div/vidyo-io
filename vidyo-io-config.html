@@ -5,23 +5,41 @@
       static get properties() {
         // properties, observers meta data
         return {
+            /**
+             * The URL to which the GET request for a token will be sent. The expected response is a JSON document with a single field named "token" and containing the token value.
+             */
             tokenServer: {
                 type: String
             },
+            /**
+             * The Vodyo.io host.
+             */
             host: {
                 type: String,
                 value: "prod.vidyo.io"
             },
+            /**
+             * The display name of the participant in the conference.
+             */
             displayName: {
                 type: String
             },
+            /**
+             * The "resource ID" or room name. All the callers with the same resource name will be put in a single room.
+             */
             resourceId: {
                 type: String
             },
+            /**
+             * The maximum number of participants in a single room.
+             */
             participants: {
                 type: Number,
                 value: 16
             },
+            /**
+             * The version of the Vidyo.io software to use.
+             */
             vidyoIoVersion: {
                 type: String,
                 value: "latest"
