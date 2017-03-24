@@ -15,9 +15,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/oi-oy-div/vidyo-io-elements.git"
+    "url": "git://github.com/oi-oy-div/vidyo-io.git"
   },
-  "homepage": "https://github.com/oi-oy-div/vidyo-io-elements",
+  "homepage": "https://github.com/oi-oy-div/vidyo-io",
   "dependencies": {
     "polymer": "Polymer/polymer#2.0.0-rc.2",
     "paper-button": "PolymerElements/paper-button#2.0-preview",
