@@ -133,10 +133,16 @@
             static get properties() {
                 // properties, observers meta data
                 return {
+                    /**
+                     * The height of the controller in percent of the elelment height.
+                     */
                     controllerHeight: {
                         type:String,
                         value: "6%"
                     },
+                    /**
+                     * If true then the element should take the entire viewport.
+                     */
                     fillViewport: {
                         type: Boolean,
                         value: false
