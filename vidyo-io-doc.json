@@ -1,0 +1,55 @@
+{
+	"elements":
+	[
+		{
+			"type":"element",
+		 	"desc":"This is a polymer element encapsulating Vidyo.io cliemt.\n",
+		 	"events":[],
+		 	"properties":
+		 	[
+		 		{
+		 			"name":"controllerHeight",
+		 			"type":"string",
+		 			"desc":"The height of the controller in percent of the elelment height.\n",
+		 			"published":true
+		 		},
+		 		{
+		 			"name":"fillViewport",
+		 			"type":"Boolean",
+		 			"desc":"If true then the element should take the entire viewport.\n",
+		 			"published":true
+		 		}
+			],
+		 	"is":"vidyo-io",
+		 	"demos":[]
+		}
+	],
+	"elementsByTagName":
+	{
+		"vidyo-io":
+		{
+			"type":"element",
+		 	"desc":"This is a polymer element encapsulating Vidyo.io cliemt.\n",
+		 	"events":[],
+		 	"properties":
+		 	[
+		 		{
+		 			"name":"controllerHeight",
+		 			"type":"string",
+		 			"desc":"The height of the controller in percent of the elelment height.\n",
+		 			"published":true
+		 		},
+		 		{
+		 			"name":"fillViewport",
+		 			"type":"Boolean",
+		 			"desc":"If true then the element should take the entire viewport.\n",
+		 			"published":true
+		 		}
+			],
+		 	"is":"vidyo-io",
+		 	"demos":[]
+		}
+	},
+	"behaviors":[],
+	"features":[]
+}
