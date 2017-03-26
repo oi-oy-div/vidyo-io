@@ -1,0 +1,25 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="vidyo-io">
+  <script>
+    Polymer({
+      is: 'vidyo-io',
+      properties: {
+                    /**
+                     * The height of the controller in percent of the elelment height.
+                     */
+                    controllerHeight: {
+                        type:String,
+                        value: "6%"
+                    },
+                    /**
+                     * If true then the element should take the entire viewport.
+                     */
+                    fillViewport: {
+                        type: Boolean,
+                        value: false
+                    }      
+     }
+    });
+  </script>
+</dom-module>
