@@ -48,6 +48,78 @@ node bower_components/vidyo-io/demo/index.js
 * Repeat this process on another computer
 * Press the green handset on both computers to establish a connection
 
+## API Reference
+
+### Properties
+<table>
+<tr>
+    <td rowspan="2">controllerHeight</td>
+    <td><i>String</i></td> 
+    <td>Default: "6%"</td>
+</tr>
+<tr>
+  <td colspan="2">The height of the controller as percent of the elelment height.</td> 
+</tr>
+<tr>
+    <td rowspan="2">fillViewport</td>
+    <td><i>Boolean</i></td> 
+    <td>Default: false</td>
+</tr>
+<tr>
+  <td colspan="2">If true then the element should take the entire viewport.</td> 
+</tr>
+<tr>
+    <td rowspan="2">tokenServer</td>
+    <td><i>String</i></td> 
+    <td>Default: ""</td>
+</tr>
+<tr>
+  <td colspan="2">The URL to which the GET request for a token will be sent. The expected response is a JSON document with a single field named "token" and containing the token value.</td> 
+</tr>
+<tr>
+    <td rowspan="2">host</td>
+    <td><i>String</i></td> 
+    <td>Default: "prod.vidyo.io"</td>
+</tr>
+<tr>
+  <td colspan="2">The Vidyo.io host.</td> 
+</tr>
+<tr>
+    <td rowspan="2">displayName</td>
+    <td><i>String</i></td> 
+    <td>Default: ""</td>
+</tr>
+<tr>
+  <td colspan="2">The display name of the participant in the conference.</td> 
+</tr>
+<tr>
+    <td rowspan="2">resourceId</td>
+    <td><i>String</i></td> 
+    <td>Default: ""</td>
+</tr>
+<tr>
+  <td colspan="2">The "resource ID" or room name. All the callers with the same resource name will be put in a single room.</td> 
+</tr>
+<tr>
+    <td rowspan="2">participants</td>
+    <td><i>Number</i></td> 
+    <td>Default: 16</td>
+</tr>
+<tr>
+  <td colspan="2">The maximum number of participants in a single room.</td> 
+</tr>
+<tr>
+    <td rowspan="2">vidyoIoVersion</td>
+    <td><i>String</i></td> 
+    <td>Default: "latest"</td>
+</tr>
+<tr>
+  <td colspan="2">The version of the Vidyo.io software to use.</td> 
+</tr>
+</table>
+
+## Demo
+
 <!--
 ```
 <custom-element-demo>
