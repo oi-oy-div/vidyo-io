@@ -28,9 +28,6 @@
     "paper-dropdown-menu": "PolymerElements/paper-dropdown-menu#2.0-preview",
     "paper-listbox": "PolymerElements/paper-listbox#2.0-preview"
   },
-  "devDependencies": {
-     "iron-component-page": "PolymerElements/iron-component-page#2.0-preview"
-  },
   "main": "vidyo-io.html",
   "ignore": []
 }
