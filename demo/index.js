@@ -33,7 +33,7 @@ if (!config.has("key") || !config.has("appID"))
 app.use(express.static('.'));
 
 app.get('/', function(request, response){
-    response.redirect('/bower_components/vidyo-io-elements/demo/index.html');
+    response.redirect('/bower_components/vidyo-io/demo/index.html');
 });
 
 app.get('/getToken', (request, response) => {  
